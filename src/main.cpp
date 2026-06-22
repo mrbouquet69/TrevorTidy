@@ -194,20 +194,17 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID) {
     if (reason == DLL_PROCESS_ATTACH) {
         g_self = hModule;
         g_shv  = GetModuleHandleA("ScriptHookV.dll");
-        if (!g_shv) return FALSE;
+        if (g_shv) {
+            g_scriptWait       = (fn_scriptWait)       GetProcAddress(g_shv, "?scriptWait@@YAXK@Z");
+            g_scriptRegister   = (fn_scriptRegister)   GetProcAddress(g_shv, "?scriptRegister@@YAXPEAUHINSTANCE__@@P6AXXZ@Z");
+            g_scriptUnregister = (fn_scriptUnregister) GetProcAddress(g_shv, "?scriptUnregister@@YAXPEAUHINSTANCE__@@Z");
+            g_nativeInit       = (fn_nativeInit)       GetProcAddress(g_shv, "?nativeInit@@YAX_K@Z");
+            g_nativePush64     = (fn_nativePush64)     GetProcAddress(g_shv, "?nativePush64@@YAX_K@Z");
+            g_nativeCall       = (fn_nativeCall)       GetProcAddress(g_shv, "?nativeCall@@YAPEA_KXZ");
 
-        g_scriptWait       = (fn_scriptWait)       GetProcAddress(g_shv, "?scriptWait@@YAXK@Z");
-        g_scriptRegister   = (fn_scriptRegister)   GetProcAddress(g_shv, "?scriptRegister@@YAXPEAUHINSTANCE__@@P6AXXZ@Z");
-        g_scriptUnregister = (fn_scriptUnregister) GetProcAddress(g_shv, "?scriptUnregister@@YAXPEAUHINSTANCE__@@Z");
-        g_nativeInit       = (fn_nativeInit)       GetProcAddress(g_shv, "?nativeInit@@YAX_K@Z");
-        g_nativePush64     = (fn_nativePush64)     GetProcAddress(g_shv, "?nativePush64@@YAX_K@Z");
-        g_nativeCall       = (fn_nativeCall)       GetProcAddress(g_shv, "?nativeCall@@YAPEA_KXZ");
-
-        if (!g_scriptWait || !g_scriptRegister || !g_scriptUnregister ||
-            !g_nativeInit || !g_nativePush64 || !g_nativeCall)
-            return FALSE;
-
-        g_scriptRegister(hModule, ScriptMain);
+            if (g_scriptWait && g_scriptRegister && g_nativeInit && g_nativePush64 && g_nativeCall)
+                g_scriptRegister(hModule, ScriptMain);
+        }
     }
     else if (reason == DLL_PROCESS_DETACH) {
         if (g_scriptUnregister && g_shv)
