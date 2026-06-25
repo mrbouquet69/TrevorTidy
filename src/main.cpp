@@ -70,7 +70,6 @@ static void REQUEST_IPL(const char* name) {
     callNative1(0x41B4893843BBDB74ULL, reinterpret_cast<uintptr_t>(name));
 }
 
-// ---- notification ----
 
 static void SHOW_NOTIFICATION(const char* msg) {
     if (g_nativeInit && g_nativePush64 && g_nativeCall) {
@@ -87,7 +86,6 @@ static void SHOW_NOTIFICATION(const char* msg) {
     callNative2(0x2ED7843F8F801023ULL, FALSE, TRUE);
 }
 
-// ---- prop placement ----
 
 static uint64_t GET_HASH_KEY(const char* name) {
     return callNativeRet1(0xD24D37CC275948CCULL, reinterpret_cast<uintptr_t>(name));
@@ -182,7 +180,7 @@ static void ScriptMain() {
 
     while (true) {
         WAIT(86400000); // 24-hour cycle loop is safer than MAXDWORD overhead
-    }
+    } 
 }
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID) {
