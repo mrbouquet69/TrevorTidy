@@ -55,15 +55,12 @@ static inline uint64_t callNativeRetN(uint64_t hash, uint64_t* args, int argc) {
     return r ? *r : 0;
 }
 
-// ---- helpers to pass floats through the native interface ----
 
 static inline uint64_t f2u(float f) {
     uint64_t out = 0;
     memcpy(&out, &f, sizeof(f));
     return out;
 }
-
-// ---- IPL / YMAP ----
 
 static void REMOVE_IPL(const char* name) {
     callNative1(0xEE6C5AD3ECE0A82DULL, reinterpret_cast<uintptr_t>(name));
@@ -146,7 +143,7 @@ static const SignPlacement SIGNS[] = {
 };
 
 static void PlaceSigns() {
-    uint64_t model = GET_HASH_KEY("prop_cs_protest_sign_04a");
+    uint64_t model = GET_HASH_KEY("prop_cs_protest_sign_04a"); // this is the only fucking sign or poster in the base game that fits inside trevors trailer
     REQUEST_MODEL(model);
     for (int i = 0; i < 100 && !HAS_MODEL_LOADED(model); i++)
         WAIT(100);
@@ -162,8 +159,6 @@ static void PlaceSigns() {
     }
 }
 
-// ---- entry ----
-
 static void ScriptMain() {
     WAIT(3000);
 
@@ -178,12 +173,12 @@ static void ScriptMain() {
 
     REQUEST_IPL("v_trailertidy");
     WAIT(500);
-    REQUEST_IPL("trevorstrailertidy");
+    REQUEST_IPL("trevorstrailertidy"); // need to load ymap otherwise shit wont work
     WAIT(1000);
 
     PlaceSigns();
 
-    SHOW_NOTIFICATION("~g~TrevorTidy~w~ loaded successfully!");
+    SHOW_NOTIFICATION("~g~TrevorTidy~w~ loaded successfully!"); // useless ass notfication but fuck it it looks cool
 
     while (true) {
         WAIT(86400000); // 24-hour cycle loop is safer than MAXDWORD overhead
@@ -193,8 +188,8 @@ static void ScriptMain() {
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID) {
     if (reason == DLL_PROCESS_ATTACH) {
         g_self = hModule;
-        g_shv  = GetModuleHandleA("ScriptHookV.dll");
-        if (g_shv) {
+        g_shv  = GetModuleHandleA("ScriptHookV.dll"); 
+        if (g_shv) { 
             g_scriptWait       = (fn_scriptWait)       GetProcAddress(g_shv, "?scriptWait@@YAXK@Z");
             g_scriptRegister   = (fn_scriptRegister)   GetProcAddress(g_shv, "?scriptRegister@@YAXPEAUHINSTANCE__@@P6AXXZ@Z");
             g_scriptUnregister = (fn_scriptUnregister) GetProcAddress(g_shv, "?scriptUnregister@@YAXPEAUHINSTANCE__@@Z");
