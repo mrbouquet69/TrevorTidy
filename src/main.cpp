@@ -155,14 +155,14 @@ static void ScriptMain() {
     WAIT(500);
     REQUEST_IPL("v_trailertidy");
     WAIT(500);
-    REQUEST_IPL("trevorstrailertidy"); // need to load ymap or shit wont work
+    REQUEST_IPL("trevorstrailertidy"); // load the ymap as well as the MLO
     WAIT(1000);
     
     PlaceSigns();
     SHOW_NOTIFICATION("~g~TrevorTidy~w~ loaded successfully!"); // useless ass notfication but fuck it looks cool
 
     while (true) {
-        WAIT(1000); // Standard safe script loop interval
+        WAIT(1000);
     }
 }
 
